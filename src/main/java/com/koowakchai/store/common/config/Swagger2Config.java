@@ -13,7 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
-@ComponentScan(basePackages = {"com.koowakchai.store"})
+@ComponentScan(basePackages = {"com.koowakchai"})
 @Configuration
 @EnableWebMvc
 public class Swagger2Config {
