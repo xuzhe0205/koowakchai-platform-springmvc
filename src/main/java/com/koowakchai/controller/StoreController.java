@@ -1,6 +1,6 @@
 package com.koowakchai.controller;
 
-import com.koowakchai.store.common.config.base.ResponseResult;
+import com.koowakchai.config.base.ResponseResult;
 import com.koowakchai.store.entity.TBusinessEntity;
 import com.koowakchai.store.service.TBusinessService;
 import com.koowakchai.store.service.TShoppingCartService;

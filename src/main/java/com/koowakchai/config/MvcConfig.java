@@ -1,4 +1,4 @@
-package com.koowakchai.store.common.config;
+package com.koowakchai.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

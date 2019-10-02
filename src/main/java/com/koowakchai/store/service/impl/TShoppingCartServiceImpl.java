@@ -5,10 +5,8 @@ import com.koowakchai.store.entity.TShoppingCartEntity;
 import com.koowakchai.store.service.TShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class TShoppingCartServiceImpl implements TShoppingCartService {
 
     @Autowired

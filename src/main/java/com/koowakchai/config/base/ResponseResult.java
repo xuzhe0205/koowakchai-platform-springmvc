@@ -1,4 +1,4 @@
-package com.koowakchai.store.common.config.base;
+package com.koowakchai.config.base;
 
 public class ResponseResult {
     private Integer result;//200正常 500异常

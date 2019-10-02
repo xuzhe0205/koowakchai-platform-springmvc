@@ -1,4 +1,4 @@
-package com.koowakchai.store.common.config;
+package com.koowakchai.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,3 +36,5 @@ public class Swagger2Config {
                 .build();
     }
 }
+
+
