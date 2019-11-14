@@ -1,7 +1,7 @@
 package com.koowakchai.store.dao.impl;
 
 import com.koowakchai.store.dao.TBusinessDao;
-import com.koowakchai.store.entity.TBusinessEntity;
+import com.koowakchai.hibernate.entity.TBusinessEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;

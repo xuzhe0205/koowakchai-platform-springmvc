@@ -1,7 +1,7 @@
 package com.koowakchai.controller;
 
-import com.koowakchai.common.config.base.ResponseResult;
-import com.koowakchai.store.entity.TBusinessEntity;
+import com.koowakchai.common.base.ResponseResult;
+import com.koowakchai.hibernate.entity.TBusinessEntity;
 import com.koowakchai.store.service.TBusinessService;
 import com.koowakchai.store.service.TShoppingCartService;
 import io.swagger.annotations.ApiOperation;
@@ -68,6 +68,24 @@ public class StoreController {
         return new ResponseResult(result,message,null);
     }
 
+    @ApiOperation(value = "Get item from cart")
+    @RequestMapping(value = "/getCartItem", method = RequestMethod.GET)
+    public ResponseResult addToCart(@ApiParam(required = true,name = "userId",value="user id") @RequestParam("userId") int userId) {
+        String message="提取该用户购物车商品成功";
+
+        Integer result=200;
+        try {
+            
+
+            return new ResponseResult(result,message,null);
+        } catch (Exception e) {
+            message="提取该用户购物车商品失败";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
     @ApiOperation(value = "getProductTypes")
     @RequestMapping(value = "/getProductTypes", method = RequestMethod.GET)
     public ResponseResult getProductTypes(@ApiParam(required = true,name = "subtypeId",value="subtype id") @RequestParam("subtypeId") int subtypeId) {
@@ -101,6 +119,8 @@ public class StoreController {
         }
         return new ResponseResult(result,message,null);
     }
+
+
 
 
 }

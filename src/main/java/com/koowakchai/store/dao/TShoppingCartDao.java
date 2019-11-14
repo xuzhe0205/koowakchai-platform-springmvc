@@ -1,6 +1,6 @@
 package com.koowakchai.store.dao;
 
-import com.koowakchai.store.entity.TShoppingCartEntity;
+import com.koowakchai.hibernate.entity.TShoppingCartEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional

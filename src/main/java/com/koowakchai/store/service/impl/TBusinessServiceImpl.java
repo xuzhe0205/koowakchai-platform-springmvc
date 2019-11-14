@@ -1,7 +1,7 @@
 package com.koowakchai.store.service.impl;
 
 import com.koowakchai.store.dao.TBusinessDao;
-import com.koowakchai.store.entity.TBusinessEntity;
+import com.koowakchai.hibernate.entity.TBusinessEntity;
 import com.koowakchai.store.service.TBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

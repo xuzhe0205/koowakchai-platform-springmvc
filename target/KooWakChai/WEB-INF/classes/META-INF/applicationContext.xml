@@ -24,7 +24,7 @@
         <property name="username" value="root" />
         <property name="password" value="xuzhe950205" />
     </bean>
-    <!--配置hibernate -->
+    <!--Configure hibernate -->
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"></property>
@@ -37,7 +37,9 @@
                 <prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="com.koowakchai.store.entity"></property>
+        <property name="packagesToScan" value="com.koowakchai.hibernate.entity"></property>
+
+
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">

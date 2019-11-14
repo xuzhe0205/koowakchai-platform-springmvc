@@ -1,6 +1,6 @@
 package com.koowakchai.store.service;
 
-import com.koowakchai.store.entity.TBusinessEntity;
+import com.koowakchai.hibernate.entity.TBusinessEntity;
 
 import java.util.List;
 

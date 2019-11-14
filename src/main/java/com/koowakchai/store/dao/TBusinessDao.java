@@ -1,6 +1,6 @@
 package com.koowakchai.store.dao;
 
-import com.koowakchai.store.entity.TBusinessEntity;
+import com.koowakchai.hibernate.entity.TBusinessEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
