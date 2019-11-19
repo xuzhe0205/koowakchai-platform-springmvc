@@ -10,6 +10,7 @@ public class TShoppingCartEntity {
     private Integer productSubtypeId;
     private Integer productId;
     private Integer quantity;
+    private String productUrl;
 
     @Id
     @Column(name = "id")
@@ -61,6 +62,16 @@ public class TShoppingCartEntity {
         this.quantity = quantity;
     }
 
+    @Basic
+    @Column(name = "product_url")
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +85,7 @@ public class TShoppingCartEntity {
             return false;
         if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
         if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
+        if (productUrl != null ? !productUrl.equals(that.productUrl) : that.productUrl != null) return false;
 
         return true;
     }
@@ -85,6 +97,7 @@ public class TShoppingCartEntity {
         result = 31 * result + (productSubtypeId != null ? productSubtypeId.hashCode() : 0);
         result = 31 * result + (productId != null ? productId.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        result = 31 * result + (productUrl != null ? productUrl.hashCode() : 0);
         return result;
     }
 }

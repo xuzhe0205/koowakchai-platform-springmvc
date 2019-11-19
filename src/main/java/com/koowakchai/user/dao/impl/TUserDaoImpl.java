@@ -44,7 +44,7 @@ public class TUserDaoImpl implements TUserDao {
     }
 
     @Override
-    public void saveOrUpdateTUser(TUserEntity tUserEntity) throws Exception{
+    public void addTUserEntity(TUserEntity tUserEntity) throws Exception{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         session.saveOrUpdate(tUserEntity);
@@ -56,5 +56,16 @@ public class TUserDaoImpl implements TUserDao {
     public void saveOrUpdateTUserRole(TUserRoleEntity tUserRoleEntity) throws Exception{
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(tUserRoleEntity);
+    }
+
+    @Override
+    public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception{
+        Session session = sessionFactory.getCurrentSession();
+        TUserEntity tUserEntity = session.get(TUserEntity.class, userId);
+        tUserEntity.setPhoneNum(userPhone);
+        tUserEntity.setGender(gender);
+        tUserEntity.setUserUrl(userUrl);
+        session.saveOrUpdate(tUserEntity);
+
     }
 }

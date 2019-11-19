@@ -11,9 +11,10 @@ public class TUserEntity {
     private String dob;
     private String phoneNum;
     private String email;
+    private String gender;
+    private String userUrl;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public long getId() {
         return id;
@@ -73,6 +74,26 @@ public class TUserEntity {
         this.email = email;
     }
 
+    @Basic
+    @Column(name = "gender")
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    @Basic
+    @Column(name = "user_url")
+    public String getUserUrl() {
+        return userUrl;
+    }
+
+    public void setUserUrl(String userUrl) {
+        this.userUrl = userUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +107,8 @@ public class TUserEntity {
         if (dob != null ? !dob.equals(that.dob) : that.dob != null) return false;
         if (phoneNum != null ? !phoneNum.equals(that.phoneNum) : that.phoneNum != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
+        if (userUrl != null ? !userUrl.equals(that.userUrl) : that.userUrl != null) return false;
 
         return true;
     }
@@ -98,6 +121,8 @@ public class TUserEntity {
         result = 31 * result + (dob != null ? dob.hashCode() : 0);
         result = 31 * result + (phoneNum != null ? phoneNum.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (gender != null ? gender.hashCode() : 0);
+        result = 31 * result + (userUrl != null ? userUrl.hashCode() : 0);
         return result;
     }
 }

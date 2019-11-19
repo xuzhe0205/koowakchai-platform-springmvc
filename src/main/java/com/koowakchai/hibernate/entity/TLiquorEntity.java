@@ -14,12 +14,12 @@ public class TLiquorEntity {
     private String size;
     private String category;
     private String year;
-    private Integer price;
+    private Double price;
     private Integer stock;
     private Integer salesVol;
+    private String productUrl;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;
@@ -111,11 +111,11 @@ public class TLiquorEntity {
 
     @Basic
     @Column(name = "price")
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -139,6 +139,16 @@ public class TLiquorEntity {
         this.salesVol = salesVol;
     }
 
+    @Basic
+    @Column(name = "product_url")
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -158,6 +168,7 @@ public class TLiquorEntity {
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (stock != null ? !stock.equals(that.stock) : that.stock != null) return false;
         if (salesVol != null ? !salesVol.equals(that.salesVol) : that.salesVol != null) return false;
+        if (productUrl != null ? !productUrl.equals(that.productUrl) : that.productUrl != null) return false;
 
         return true;
     }
@@ -176,6 +187,7 @@ public class TLiquorEntity {
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (stock != null ? stock.hashCode() : 0);
         result = 31 * result + (salesVol != null ? salesVol.hashCode() : 0);
+        result = 31 * result + (productUrl != null ? productUrl.hashCode() : 0);
         return result;
     }
 }

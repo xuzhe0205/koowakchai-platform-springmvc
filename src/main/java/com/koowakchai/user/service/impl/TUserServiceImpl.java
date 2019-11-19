@@ -21,13 +21,13 @@ public class TUserServiceImpl implements TUserService {
     }
 
     @Override
-    public void saveOrUpdateTUser(String username, String password, String email, String dob) throws Exception{
+    public void addTUserEntity(String username, String password, String email, String dob) throws Exception{
         TUserEntity tUserEntity = new TUserEntity();
         tUserEntity.setDob(dob);
         tUserEntity.setEmail(email);
         tUserEntity.setPassword(password);
         tUserEntity.setUsername(username);
-        tUserDao.saveOrUpdateTUser(tUserEntity);
+        tUserDao.addTUserEntity(tUserEntity);
     }
 
     @Override
@@ -56,6 +56,10 @@ public class TUserServiceImpl implements TUserService {
 
         tUserDao.saveOrUpdateTUserRole(tUserRoleEntity);
 
+    }
 
+    @Override
+    public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception{
+        tUserDao.saveOrUpdateTUserEntity(userId, userUrl, gender, userPhone);
     }
 }

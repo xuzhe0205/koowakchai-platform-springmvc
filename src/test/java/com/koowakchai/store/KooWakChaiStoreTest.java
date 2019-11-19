@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.koowakchai.common.util.JWTUtils;
 import com.koowakchai.store.dao.TBusinessDao;
 import com.koowakchai.store.service.TBusinessService;
+import com.koowakchai.store.service.TShoppingCartService;
 import com.koowakchai.user.dao.TUserDao;
 import com.koowakchai.user.service.TUserService;
 import org.junit.Test;
@@ -32,6 +33,9 @@ public class KooWakChaiStoreTest {
     @Autowired
     private TUserDao tUserDao;
 
+    @Autowired
+    private TShoppingCartService tShoppingCartService;
+
 
     private JWTUtils jwtUtils;
 
@@ -58,5 +62,11 @@ public class KooWakChaiStoreTest {
     public void testGetUserId() throws Exception{
         Long userId = tUserDao.getUserId("oliverxu0205@gmail.com");
         System.out.println("your userId: " + userId);
+    }
+
+    @Test
+    public void testShoppingCartItems() throws Exception{
+        int cartSize = tShoppingCartService.getCartItem(1).size();
+        System.out.println("my shopping cart size: " + cartSize);
     }
 }
