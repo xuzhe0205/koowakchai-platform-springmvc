@@ -1,12 +1,13 @@
 package com.koowakchai.hibernate.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_payment_info", schema = "dbKoowakchai", catalog = "")
 public class TPaymentInfoEntity {
-    private int id;
+    private long id;
     private long userId;
     private String method;
     private String cardNum;
@@ -14,18 +15,20 @@ public class TPaymentInfoEntity {
     private String cvv;
     private String expDate;
 
+
+
+
     @Id
     @Column(name = "id")
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
     @Basic
-    @NotNull
     @Column(name = "user_id")
     public long getUserId() {
         return userId;
@@ -36,7 +39,6 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "method")
     public String getMethod() {
         return method;
@@ -47,7 +49,6 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "card_num")
     public String getCardNum() {
         return cardNum;
@@ -58,7 +59,6 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "zipcode")
     public String getZipcode() {
         return zipcode;
@@ -69,7 +69,6 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "cvv")
     public String getCvv() {
         return cvv;
@@ -80,7 +79,6 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "exp_date")
     public String getExpDate() {
         return expDate;
@@ -110,7 +108,7 @@ public class TPaymentInfoEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (userId ^ (userId >>> 32));
         result = 31 * result + (method != null ? method.hashCode() : 0);
         result = 31 * result + (cardNum != null ? cardNum.hashCode() : 0);

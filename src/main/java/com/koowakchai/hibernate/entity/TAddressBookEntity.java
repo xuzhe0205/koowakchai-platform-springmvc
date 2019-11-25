@@ -12,6 +12,7 @@ public class TAddressBookEntity {
     private String fullAddr;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public long getId() {
         return id;

@@ -5,9 +5,13 @@ import com.koowakchai.hibernate.entity.TBusinessEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
@@ -35,5 +39,17 @@ public class TBusinessDaoImpl implements TBusinessDao {
     public void saveOrUpdateTBusinessType(TBusinessEntity tBusinessEntity) throws Exception{
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(tBusinessEntity);
+    }
+
+    @Override
+    public int getBusinessSubtype(int businessTypeId) throws Exception{
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TBusinessEntity> cr = cb.createQuery(TBusinessEntity.class);
+        Root<TBusinessEntity> root = cr.from(TBusinessEntity.class);
+        cr.select(root).where(cb.equal(root.get("id"),businessTypeId));
+        Query<TBusinessEntity> query = session.createQuery(cr);
+        TBusinessEntity tBusinessEntity = query.getSingleResult();
+        return tBusinessEntity.getSubtypeId();
     }
 }

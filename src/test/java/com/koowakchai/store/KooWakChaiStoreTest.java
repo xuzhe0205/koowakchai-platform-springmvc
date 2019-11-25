@@ -1,9 +1,14 @@
 package com.koowakchai.store;
 
 import com.auth0.jwt.interfaces.Claim;
+import com.koowakchai.common.email.AnnexEMailService;
 import com.koowakchai.common.util.JWTUtils;
-import com.koowakchai.store.dao.TBusinessDao;
+import com.koowakchai.hibernate.entity.TTotalOrderEntity;
+import com.koowakchai.store.dao.TLogisticsOrderDao;
+import com.koowakchai.store.dao.TTotalOrderDao;
+import com.koowakchai.store.service.StoreEmailService;
 import com.koowakchai.store.service.TBusinessService;
+import com.koowakchai.store.service.TLogisticsOrderService;
 import com.koowakchai.store.service.TShoppingCartService;
 import com.koowakchai.user.dao.TUserDao;
 import com.koowakchai.user.service.TUserService;
@@ -13,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +40,19 @@ public class KooWakChaiStoreTest {
 
     @Autowired
     private TShoppingCartService tShoppingCartService;
+
+    @Autowired
+    private AnnexEMailService annexEMailService;
+
+    @Autowired
+    private TTotalOrderDao tTotalOrderDao;
+
+    @Autowired
+    private StoreEmailService storeEmailService;
+
+    @Autowired
+    private TLogisticsOrderService tLogisticsOrderService;
+
 
 
     private JWTUtils jwtUtils;
@@ -68,5 +86,29 @@ public class KooWakChaiStoreTest {
     public void testShoppingCartItems() throws Exception{
         int cartSize = tShoppingCartService.getCartItem(1).size();
         System.out.println("my shopping cart size: " + cartSize);
+    }
+
+    @Test
+    public void testEmail() throws Exception{
+//        List<Object> objectList = new ArrayList<>();
+//        TTotalOrderEntity tTotalOrderEntity = tTotalOrderDao.getTTotalOrderEntity(2);
+//        objectList.add(tTotalOrderEntity);
+        List<Long> orderIds = new ArrayList<>();
+        long l1 = 25;
+        long l2= 26;
+        orderIds.add(l1);
+        orderIds.add(l2);
+//        TTotalOrderEntity tTotalOrderEntity = tTotalOrderDao.getTTotalOrderEntity(l1);
+        System.out.println("sent email: " + storeEmailService.sendConfirmationEmail(orderIds));
+
+    }
+
+    @Test
+    public void testLogisticsOrder() throws Exception{
+        List<Long> orderIds = new ArrayList<>();
+        orderIds.add(new Long(25));
+        orderIds.add(new Long(26));
+        tLogisticsOrderService.addShippingOrders(orderIds,1);
+
     }
 }

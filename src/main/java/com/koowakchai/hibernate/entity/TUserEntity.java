@@ -15,6 +15,7 @@ public class TUserEntity {
     private String userUrl;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public long getId() {
         return id;

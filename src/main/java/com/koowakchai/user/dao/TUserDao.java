@@ -20,4 +20,7 @@ public interface TUserDao {
     public void saveOrUpdateTUserRole(TUserRoleEntity tUserRoleEntity) throws Exception;
 
     public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception;
+
+    public TUserEntity getTUserEntity(long userId) throws Exception;
+
 }

@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TAddressBookDao {
 
     public void saveOrUpdateAddress(TAddressBookEntity tAddressBookEntity) throws Exception;
-
+    public TAddressBookEntity getTAddressBookEntity(long addrId) throws Exception;
 }

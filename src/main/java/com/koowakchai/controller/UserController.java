@@ -2,21 +2,25 @@ package com.koowakchai.controller;
 
 import com.koowakchai.common.base.ResponseResult;
 import com.koowakchai.common.util.JWTUtils;
+import com.koowakchai.store.service.StoreEmailService;
+import com.koowakchai.user.service.CompleteOrderService;
 import com.koowakchai.user.service.TAddressBookService;
 import com.koowakchai.user.service.TPaymentInfoService;
 import com.koowakchai.user.service.TUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/user")
 @RestController
+@EnableAsync
 public class UserController {
 
     @Autowired
@@ -27,6 +31,15 @@ public class UserController {
 
     @Autowired
     private TPaymentInfoService tPaymentInfoService;
+
+    @Autowired
+    private HttpSession httpSession;
+
+    @Autowired
+    private CompleteOrderService completeOrderService;
+
+    @Autowired
+    private StoreEmailService storeEmailService;
 
     @ApiOperation(value = "User login")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -154,6 +167,48 @@ public class UserController {
 
         } catch (Exception e) {
             message="更新用户支付方式信息Successfully update/add user's payment method！！！";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "Update Placed Orders")
+    @RequestMapping(value = "/updateOrders", method = RequestMethod.POST)
+    public ResponseResult updatePaymentInfo(@ApiParam(required = false,name="Authorization")  @RequestHeader(value = "Authorization",required = false,defaultValue = "") String Authorization,
+                                            @ApiParam(required = false,name = "orderId",value="orderId") @RequestParam(value = "orderId", defaultValue = "0")long orderId,
+                                            @ApiParam(required = true,name = "userId",value="User's Id") @RequestParam("userId") long userId,
+                                            @ApiParam(required = true,name = "paymentId",value="User's paymentId") @RequestParam("paymentId") long paymentId,
+                                            @ApiParam(required = true,name = "addrId",value="User's addrId") @RequestParam("addrId") long addrId
+    ) {
+        String message="成功更新用户订单Successfully update user's placed orders！！！";
+
+        Integer result=200;
+
+        List<Long> emailOrderIds= new ArrayList<>();
+
+        try {
+
+            List<Long> placedOrderIds = (ArrayList<Long>)httpSession.getAttribute("placedOrderIds");
+            if (placedOrderIds == null){
+                completeOrderService.updateTTotalOrderEntity(orderId, userId, addrId, paymentId);
+
+                emailOrderIds.add(orderId);
+            }
+            else{
+                emailOrderIds = placedOrderIds;
+                for (Long id : placedOrderIds){
+                    completeOrderService.updateTTotalOrderEntity(id, userId, addrId, paymentId);
+                }
+            }
+
+            System.out.println("Order placed, now trying to send confirmation email");
+            boolean isEmailSent = (storeEmailService.sendConfirmationEmail(emailOrderIds) == null)?false:true;
+
+            return new ResponseResult(result, message, null);
+
+        } catch (Exception e) {
+            message="更新用户订单失败 Fail to update user's placed orders！！！";
             result=500;
             e.printStackTrace();
         }

@@ -7,9 +7,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -66,6 +70,17 @@ public class TUserDaoImpl implements TUserDao {
         tUserEntity.setGender(gender);
         tUserEntity.setUserUrl(userUrl);
         session.saveOrUpdate(tUserEntity);
+    }
 
+    @Override
+    public TUserEntity getTUserEntity(long userId) throws Exception{
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TUserEntity> cr = cb.createQuery(TUserEntity.class);
+        Root<TUserEntity> root = cr.from(TUserEntity.class);
+        cr.select(root).where(cb.equal(root.get("id"),userId));
+        Query<TUserEntity> query = session.createQuery(cr);
+        TUserEntity tUserEntity = query.getSingleResult();
+        return tUserEntity;
     }
 }

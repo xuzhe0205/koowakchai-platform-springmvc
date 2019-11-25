@@ -13,4 +13,6 @@ public interface TBusinessDao {
 
     public void saveOrUpdateTBusinessType(TBusinessEntity tBusinessTypeEntity) throws Exception;
 
+    public int getBusinessSubtype(int businessTypeId) throws Exception;
+
 }
