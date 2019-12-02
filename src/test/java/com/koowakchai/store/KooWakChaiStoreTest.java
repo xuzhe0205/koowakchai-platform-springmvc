@@ -161,7 +161,7 @@ public class KooWakChaiStoreTest {
     public void testAutoAssign() throws Exception{
         generateTask.setRole("deliveryman");
 
-        generateTask.setErrandType("procurement service");
+        generateTask.setErrandType("pickup dropoff");
         autoDispatchTaskThread.run();
         System.out.println("how many: ");
     }
