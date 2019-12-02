@@ -13,6 +13,7 @@ public class TUserEntity {
     private String email;
     private String gender;
     private String userUrl;
+    private String region;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,6 +96,16 @@ public class TUserEntity {
         this.userUrl = userUrl;
     }
 
+    @Basic
+    @Column(name = "region")
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,6 +121,7 @@ public class TUserEntity {
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
         if (userUrl != null ? !userUrl.equals(that.userUrl) : that.userUrl != null) return false;
+        if (region != null ? !region.equals(that.region) : that.region != null) return false;
 
         return true;
     }
@@ -124,6 +136,7 @@ public class TUserEntity {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         result = 31 * result + (userUrl != null ? userUrl.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
         return result;
     }
 }

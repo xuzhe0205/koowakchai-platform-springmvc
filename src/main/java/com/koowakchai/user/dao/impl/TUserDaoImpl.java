@@ -1,7 +1,6 @@
 package com.koowakchai.user.dao.impl;
 
 import com.koowakchai.hibernate.entity.TUserEntity;
-import com.koowakchai.hibernate.entity.TUserRoleEntity;
 import com.koowakchai.user.dao.TUserDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -48,19 +47,15 @@ public class TUserDaoImpl implements TUserDao {
     }
 
     @Override
-    public void addTUserEntity(TUserEntity tUserEntity) throws Exception{
+    public Long addTUserEntity(TUserEntity tUserEntity) throws Exception{
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        session.saveOrUpdate(tUserEntity);
+        Long userId =(Long)session.save(tUserEntity);
         tx.commit();
         session.close();
+        return userId;
     }
 
-    @Override
-    public void saveOrUpdateTUserRole(TUserRoleEntity tUserRoleEntity) throws Exception{
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(tUserRoleEntity);
-    }
 
     @Override
     public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception{
@@ -82,5 +77,29 @@ public class TUserDaoImpl implements TUserDao {
         Query<TUserEntity> query = session.createQuery(cr);
         TUserEntity tUserEntity = query.getSingleResult();
         return tUserEntity;
+    }
+
+    @Override
+    public List<TUserEntity> getDriverByStatus(String status){
+        Session session = sessionFactory.getCurrentSession();
+        NativeQuery query = session.createSQLQuery("select t_user.id, username, password, dob, phone_num, email, gender, user_url, region from t_user join t_driver on t_user.id = t_driver.user_id where t_driver.status = :status and t_driver.assigned_trip_id is null").addEntity(TUserEntity.class);
+        List<TUserEntity> tUserEntityList = query.setParameter("status", status).getResultList();
+        return tUserEntityList;
+    }
+
+    @Override
+    public void updateUserRegion(long userId, String region) throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        TUserEntity tUserEntity = session.get(TUserEntity.class, userId);
+        tUserEntity.setRegion(region);
+        session.saveOrUpdate(tUserEntity);
+    }
+
+    @Override
+    public List<TUserEntity> getDeliverymanByStatus(String status) {
+        Session session = sessionFactory.getCurrentSession();
+        NativeQuery query = session.createSQLQuery("select t_user.id, username, password, dob, phone_num, email, gender, user_url, region from t_user join t_deliveryman on t_user.id = t_deliveryman.user_id where t_deliveryman.status = :status and t_deliveryman.assigned_order_id is null").addEntity(TUserEntity.class);
+        List<TUserEntity> tUserEntityList = query.setParameter("status", status).getResultList();
+        return tUserEntityList;
     }
 }

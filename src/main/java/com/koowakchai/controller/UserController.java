@@ -2,7 +2,9 @@ package com.koowakchai.controller;
 
 import com.koowakchai.common.base.ResponseResult;
 import com.koowakchai.common.util.JWTUtils;
+import com.koowakchai.errand.service.TDeliverymanService;
 import com.koowakchai.store.service.StoreEmailService;
+import com.koowakchai.travel.service.TDriverService;
 import com.koowakchai.user.service.CompleteOrderService;
 import com.koowakchai.user.service.TAddressBookService;
 import com.koowakchai.user.service.TPaymentInfoService;
@@ -41,6 +43,12 @@ public class UserController {
     @Autowired
     private StoreEmailService storeEmailService;
 
+    @Autowired
+    private TDriverService tDriverService;
+
+    @Autowired
+    private TDeliverymanService tDeliverymanService;
+
     @ApiOperation(value = "User login")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult login(@ApiParam(required = true,name = "username",value="user's username") @RequestParam("username") String username,
@@ -75,23 +83,29 @@ public class UserController {
                                 @ApiParam(required = true,name = "confirmPassword",value="user's confirmPassword") @RequestParam("confirmPassword") String confirmPassword,
                                 @ApiParam(required = true,name = "email",value="user's email") @RequestParam("email") String email,
                                 @ApiParam(required = true,name = "roleName",value="user's role") @RequestParam("roleName") String roleName,
-                                @ApiParam(required = true,name = "dob",value="user's dob") @RequestParam("dob") String dob
+                                @ApiParam(required = true,name = "dob",value="user's dob") @RequestParam("dob") String dob,
+                                 @ApiParam(required = true,name = "gender",value="user's gender") @RequestParam("gender") String gender
                                 ) {
         String message="注册成功！！！";
 
         Integer result=200;
 
         String token = "";
+        Long userId = null;
         try {
             if (confirmPassword.equals(password)){
-                tUserService.addTUserEntity(username,password,email,dob);
+                userId = tUserService.addTUserEntity(username,password,email,dob, gender);
                 tUserService.saveOrUpdateTUserRole(roleName,email);
+                if (roleName.equals("deliveryman")){
+                    tDeliverymanService.addTDeliverymanEntity(userId);
+                }
+
             }
             else{
                 result = 500;
                 message = "Unmatched password";
             }
-            return new ResponseResult(result, message, null);
+            return new ResponseResult(result, message, userId);
 
         } catch (Exception e) {
             message="注册失败！！！";
@@ -209,6 +223,46 @@ public class UserController {
 
         } catch (Exception e) {
             message="更新用户订单失败 Fail to update user's placed orders！！！";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "Driver info register")
+    @RequestMapping(value = "/registerDriverInfo", method = RequestMethod.POST)
+    public ResponseResult registerDriverInfo(@ApiParam(required = true,name = "userId",value="userId") @RequestParam("userId") long userId,
+                                             @ApiParam(required = true,name = "driverLicense",value="driverLicense") @RequestParam("driverLicense") String driverLicense,
+                                             @ApiParam(required = true,name = "vehicleMake",value="vehicleMake") @RequestParam("vehicleMake") String vehicleMake,
+                                             @ApiParam(required = true,name = "vehicleModel",value="vehicleModel") @RequestParam("vehicleModel") String vehicleModel,
+                                             @ApiParam(required = true,name = "vehicleYear",value="vehicleYear") @RequestParam("vehicleYear") String vehicleYear,
+                                             @ApiParam(required = true,name = "vehicleClass",value="vehicleClass") @RequestParam("vehicleClass") String vehicleClass) {
+        String message="乘客用户添加顺风车订单成功 Successfully added hitchhiking order!!!";
+
+        Integer result=200;
+        try {
+            tDriverService.addDriverInfo(userId, driverLicense, vehicleMake, vehicleModel, vehicleYear, vehicleClass);
+            return new ResponseResult(result,message,null);
+        } catch (Exception e) {
+            message="乘客用户添加顺风车订单失败 Failed to add hitchhiking order!!!";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "update user region")
+    @RequestMapping(value = "/updateUserRegion", method = RequestMethod.POST)
+    public ResponseResult updateUserRegion(@ApiParam(required = true,name = "userId",value="userId") @RequestParam("userId") long userId,
+                                             @ApiParam(required = true,name = "region",value="region") @RequestParam("region") String region) {
+        String message="用户成功更新（选择） Successfully updated (choose) region!!!";
+
+        Integer result=200;
+        try {
+            tUserService.updateUserRegion(userId, region);
+            return new ResponseResult(result,message,null);
+        } catch (Exception e) {
+            message="用户更新（选择）失败 Failed to update (choose) region!!!";
             result=500;
             e.printStackTrace();
         }

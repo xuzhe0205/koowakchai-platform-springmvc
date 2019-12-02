@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.koowakchai", "com.koowakchai.common.email"})
+@ComponentScan(basePackages = {"com.koowakchai", "com.koowakchai.common.email", "com.koowakchai.common.distribution"})
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override

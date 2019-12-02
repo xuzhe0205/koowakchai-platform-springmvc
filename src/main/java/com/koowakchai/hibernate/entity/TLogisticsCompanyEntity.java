@@ -10,6 +10,7 @@ public class TLogisticsCompanyEntity {
     private long staffPhone;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;

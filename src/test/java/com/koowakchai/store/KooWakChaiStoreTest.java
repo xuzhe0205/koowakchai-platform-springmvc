@@ -1,15 +1,20 @@
 package com.koowakchai.store;
 
 import com.auth0.jwt.interfaces.Claim;
+import com.koowakchai.common.distribution.AutoDispatchTaskThread;
+import com.koowakchai.common.distribution.GenerateTask;
 import com.koowakchai.common.email.AnnexEMailService;
 import com.koowakchai.common.util.JWTUtils;
-import com.koowakchai.hibernate.entity.TTotalOrderEntity;
+import com.koowakchai.hibernate.entity.*;
 import com.koowakchai.store.dao.TLogisticsOrderDao;
 import com.koowakchai.store.dao.TTotalOrderDao;
 import com.koowakchai.store.service.StoreEmailService;
 import com.koowakchai.store.service.TBusinessService;
 import com.koowakchai.store.service.TLogisticsOrderService;
 import com.koowakchai.store.service.TShoppingCartService;
+import com.koowakchai.travel.dao.TAirportRideDao;
+import com.koowakchai.travel.dao.TDriverDao;
+import com.koowakchai.travel.dao.TTravelOrderDao;
 import com.koowakchai.user.dao.TUserDao;
 import com.koowakchai.user.service.TUserService;
 import org.junit.Test;
@@ -53,7 +58,20 @@ public class KooWakChaiStoreTest {
     @Autowired
     private TLogisticsOrderService tLogisticsOrderService;
 
+    @Autowired
+    private TAirportRideDao tAirportRideDao;
 
+    @Autowired
+    private TDriverDao tDriverDao;
+
+    @Autowired
+    private TTravelOrderDao tTravelOrderDao;
+
+    @Autowired
+    private AutoDispatchTaskThread autoDispatchTaskThread;
+
+    @Autowired
+    private GenerateTask generateTask;
 
     private JWTUtils jwtUtils;
 
@@ -110,5 +128,41 @@ public class KooWakChaiStoreTest {
         orderIds.add(new Long(26));
         tLogisticsOrderService.addShippingOrders(orderIds,1);
 
+    }
+
+    @Test
+    public void testGetTAirportInfoByCondition() throws Exception{
+        List<TAirportInfoEntity> tAirportInfoEntityList = tAirportRideDao.getTAirportEntityByCondition("", "");
+        System.out.println("airportinfo number: " + tAirportInfoEntityList.size());
+
+    }
+
+    @Test
+    public void testGetDriverByStatus() throws Exception{
+        List<TUserEntity> tUserEntityList = tUserService.getDriverByStatus("active");
+        System.out.println("how many active driver: " + tUserEntityList.size());
+    }
+
+    @Test
+    public void testGetTravelOrderByCondition() throws Exception{
+        List<TTravelOrderEntity> tTravelOrderEntityList = tAirportRideDao.getTravelOrderEntityByType("hitch hike");
+        TDriverEntity tDriverEntity = tDriverDao.getTDriverEntity(28);
+        tDriverEntity.setAssignedTripId((long)1);
+        System.out.println("how many: " + tTravelOrderEntityList.size());
+    }
+
+    @Test
+    public void testPushOrder() throws Exception{
+        TTravelOrderEntity tTravelOrderEntity = tTravelOrderDao.getTravelOrders(28);
+        System.out.println("how many: ");
+    }
+
+    @Test
+    public void testAutoAssign() throws Exception{
+        generateTask.setRole("deliveryman");
+
+        generateTask.setErrandType("procurement service");
+        autoDispatchTaskThread.run();
+        System.out.println("how many: ");
     }
 }
