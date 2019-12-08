@@ -20,7 +20,7 @@ public class TBusinessDaoImpl implements TBusinessDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public List<String> getAllBusinessTypes() throws Exception{
+    public List<String>  getAllBusinessTypes() throws Exception{
         Session session = sessionFactory.getCurrentSession();
         NativeQuery query = session.createSQLQuery("select distinct business_name from t_business");
         List<String> tBusinessEntityList = query.getResultList();

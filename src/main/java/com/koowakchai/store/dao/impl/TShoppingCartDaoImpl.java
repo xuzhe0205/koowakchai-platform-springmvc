@@ -35,7 +35,7 @@ public class TShoppingCartDaoImpl implements TShoppingCartDao {
     }
 
     @Override
-    public TShoppingCartEntity getTShoppingCartEntity(long cartEntityId) throws Exception {
+    public TShoppingCartEntity getTShoppingCartEntity(int cartEntityId) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<TShoppingCartEntity> cr = cb.createQuery(TShoppingCartEntity.class);
@@ -44,5 +44,13 @@ public class TShoppingCartDaoImpl implements TShoppingCartDao {
         Query<TShoppingCartEntity> query = session.createQuery(cr);
         TShoppingCartEntity tBusinessSubtypeEntity = query.getSingleResult();
         return tBusinessSubtypeEntity;
+    }
+
+    @Override
+    public void deleteTShoppingCartEntity(int cartEntityId) throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        TShoppingCartEntity tShoppingCartEntity = new TShoppingCartEntity();
+        tShoppingCartEntity.setId(cartEntityId);
+        session.delete(tShoppingCartEntity);
     }
 }

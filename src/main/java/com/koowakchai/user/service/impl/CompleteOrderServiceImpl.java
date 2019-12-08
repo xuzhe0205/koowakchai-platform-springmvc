@@ -37,12 +37,14 @@ public class CompleteOrderServiceImpl implements CompleteOrderService {
         String recipientName = tAddressBookEntity.getRecipient();
 
         TPaymentInfoEntity tPaymentInfoEntity = tPaymentInfoDao.getPaymentInfoEntity(paymentId);
-        String paymentMethod = tPaymentInfoEntity.getMethod();
-        String outTradeNumber = "";
-        if (paymentMethod.equals("alipay")){
-            outTradeNumber  = "some Alipay payment code";
-        }
+//        String paymentMethod = tPaymentInfoEntity.getMethod();
+//        String outTradeNumber = "";
+//        if (paymentMethod.equals("alipay")){
+//            outTradeNumber  = "some Alipay payment code";
+//        }
 
+        String paymentMethod = "Credit Card";
+        String outTradeNumber = "";
 
         double totalCost =  tTotalOrderEntity.getPrice()*tTotalOrderEntity.getQuantity()+tTotalOrderEntity.getShipping();
 

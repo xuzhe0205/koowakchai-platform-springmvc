@@ -1,24 +1,20 @@
 package com.koowakchai.hibernate.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "t_payment_info", schema = "dbKoowakchai", catalog = "")
 public class TPaymentInfoEntity {
     private long id;
     private long userId;
-    private String method;
+    private String cardholderName;
     private String cardNum;
     private String zipcode;
     private String cvv;
     private String expDate;
 
-
-
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public long getId() {
         return id;
@@ -39,13 +35,13 @@ public class TPaymentInfoEntity {
     }
 
     @Basic
-    @Column(name = "method")
-    public String getMethod() {
-        return method;
+    @Column(name = "cardholder_name")
+    public String getCardholderName() {
+        return cardholderName;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setCardholderName(String cardholderName) {
+        this.cardholderName = cardholderName;
     }
 
     @Basic
@@ -97,7 +93,8 @@ public class TPaymentInfoEntity {
 
         if (id != that.id) return false;
         if (userId != that.userId) return false;
-        if (method != null ? !method.equals(that.method) : that.method != null) return false;
+        if (cardholderName != null ? !cardholderName.equals(that.cardholderName) : that.cardholderName != null)
+            return false;
         if (cardNum != null ? !cardNum.equals(that.cardNum) : that.cardNum != null) return false;
         if (zipcode != null ? !zipcode.equals(that.zipcode) : that.zipcode != null) return false;
         if (cvv != null ? !cvv.equals(that.cvv) : that.cvv != null) return false;
@@ -110,7 +107,7 @@ public class TPaymentInfoEntity {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (userId ^ (userId >>> 32));
-        result = 31 * result + (method != null ? method.hashCode() : 0);
+        result = 31 * result + (cardholderName != null ? cardholderName.hashCode() : 0);
         result = 31 * result + (cardNum != null ? cardNum.hashCode() : 0);
         result = 31 * result + (zipcode != null ? zipcode.hashCode() : 0);
         result = 31 * result + (cvv != null ? cvv.hashCode() : 0);

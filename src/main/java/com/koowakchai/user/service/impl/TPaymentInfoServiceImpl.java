@@ -13,13 +13,13 @@ public class TPaymentInfoServiceImpl implements TPaymentInfoService {
     private TPaymentInfoDao tPaymentInfoDao;
 
     @Override
-    public void addTPaymentInfoEntity(long userId, String method, String cardNum, String zipcode, String cvv, String expDate) throws Exception{
+    public void addTPaymentInfoEntity(long userId, String cardholderName, String cardNum, String zipcode, String cvv, String expDate) throws Exception{
         TPaymentInfoEntity tPaymentInfoEntity = new TPaymentInfoEntity();
         tPaymentInfoEntity.setCardNum(cardNum);
         tPaymentInfoEntity.setCvv(cvv);
         tPaymentInfoEntity.setUserId(userId);
         tPaymentInfoEntity.setZipcode(zipcode);
-        tPaymentInfoEntity.setMethod(method);
+        tPaymentInfoEntity.setCardholderName(cardholderName);
         tPaymentInfoEntity.setExpDate(expDate);
         tPaymentInfoDao.addTPaymentInfoEntity(tPaymentInfoEntity);
     }

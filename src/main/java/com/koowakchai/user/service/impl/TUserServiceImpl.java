@@ -72,8 +72,8 @@ public class TUserServiceImpl implements TUserService {
     }
 
     @Override
-    public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception{
-        tUserDao.saveOrUpdateTUserEntity(userId, userUrl, gender, userPhone);
+    public void saveOrUpdateTUserEntity(long userId, String userUrl, String email, String userPhone) throws Exception{
+        tUserDao.saveOrUpdateTUserEntity(userId, userUrl, email, userPhone);
     }
 
     @Override

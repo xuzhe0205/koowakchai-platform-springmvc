@@ -1,12 +1,21 @@
 package com.koowakchai.hibernate.entity;
 
 public class ShoppingCartItemEntity {
+    private int cartId;
     private String itemName;
     private Double price;
     private String category;
     private String brand;
     private int quantity;
     private String productUrl;
+
+    public int getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
+    }
 
     public String getItemName() {
         return itemName;

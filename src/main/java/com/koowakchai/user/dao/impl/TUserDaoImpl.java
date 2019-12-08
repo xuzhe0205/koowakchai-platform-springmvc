@@ -58,11 +58,13 @@ public class TUserDaoImpl implements TUserDao {
 
 
     @Override
-    public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception{
+    public void saveOrUpdateTUserEntity(long userId, String userUrl, String email, String userPhone) throws Exception{
         Session session = sessionFactory.getCurrentSession();
         TUserEntity tUserEntity = session.get(TUserEntity.class, userId);
         tUserEntity.setPhoneNum(userPhone);
-        tUserEntity.setGender(gender);
+        if (!email.equals("") || email!=null){
+            tUserEntity.setEmail(email);
+        }
         tUserEntity.setUserUrl(userUrl);
         session.saveOrUpdate(tUserEntity);
     }

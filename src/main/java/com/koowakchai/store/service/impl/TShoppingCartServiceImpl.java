@@ -29,6 +29,14 @@ public class TShoppingCartServiceImpl implements TShoppingCartService {
     @Override
     public void saveOrUpdateCart(long userId, int subtypeId, int productId, int quantity) throws Exception{
         TShoppingCartEntity tShoppingCartEntity = new TShoppingCartEntity();
+        if (subtypeId==1){
+            TECigaretteEntity teCigaretteEntity = teCigaretteDao.getTECigaCartItemEntity(productId);
+            tShoppingCartEntity.setProductUrl(teCigaretteEntity.getProductUrl());
+        }
+        else if (subtypeId==2){
+            TLiquorEntity tLiquorEntity = tLiquorDao.getTLiquorCartItemEntity(productId);
+            tShoppingCartEntity.setProductUrl(tLiquorEntity.getProductUrl());
+        }
         tShoppingCartEntity.setProductId(productId);
         tShoppingCartEntity.setQuantity(quantity);
         tShoppingCartEntity.setUserId(userId);
@@ -50,6 +58,7 @@ public class TShoppingCartServiceImpl implements TShoppingCartService {
                 shoppingCartItemEntity.setPrice(teCigaretteEntity.getPrice());
                 shoppingCartItemEntity.setQuantity(tShoppingCartEntity.getQuantity());
                 shoppingCartItemEntity.setProductUrl(tShoppingCartEntity.getProductUrl());
+                shoppingCartItemEntity.setCartId(tShoppingCartEntity.getId());
                 cartItemList.add(shoppingCartItemEntity);
             }
             else if (tShoppingCartEntity.getProductSubtypeId() == 2){
@@ -61,9 +70,17 @@ public class TShoppingCartServiceImpl implements TShoppingCartService {
                 shoppingCartItemEntity.setBrand(tLiquorEntity.getBrand());
                 shoppingCartItemEntity.setCategory(tLiquorEntity.getCategory());
                 shoppingCartItemEntity.setProductUrl(tShoppingCartEntity.getProductUrl());
+                shoppingCartItemEntity.setCartId(tShoppingCartEntity.getId());
                 cartItemList.add(shoppingCartItemEntity);
             }
         }
         return cartItemList;
+    }
+
+    @Override
+    public void deleteShoppingCartItemEntity(List<Integer> cartIds) throws Exception {
+        for (int id : cartIds){
+            tShoppingCartDao.deleteTShoppingCartEntity(id);
+        }
     }
 }

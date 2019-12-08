@@ -1,10 +1,15 @@
 package com.koowakchai.controller;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.koowakchai.common.base.ResponseResult;
 import com.koowakchai.common.util.JWTUtils;
 import com.koowakchai.errand.service.TDeliverymanService;
+import com.koowakchai.hibernate.entity.TPaymentInfoEntity;
+import com.koowakchai.hibernate.entity.TUserEntity;
 import com.koowakchai.store.service.StoreEmailService;
 import com.koowakchai.travel.service.TDriverService;
+import com.koowakchai.user.dao.TPaymentInfoDao;
+import com.koowakchai.user.dao.TUserDao;
 import com.koowakchai.user.service.CompleteOrderService;
 import com.koowakchai.user.service.TAddressBookService;
 import com.koowakchai.user.service.TPaymentInfoService;
@@ -19,7 +24,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 100000)
 @RequestMapping("/user")
 @RestController
 @EnableAsync
@@ -49,6 +56,14 @@ public class UserController {
     @Autowired
     private TDeliverymanService tDeliverymanService;
 
+    @Autowired
+    private TUserDao tUserDao;
+
+    @Autowired
+    private TPaymentInfoDao tPaymentInfoDao;
+
+    private JWTUtils jwtUtils;
+
     @ApiOperation(value = "User login")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult login(@ApiParam(required = true,name = "username",value="user's username") @RequestParam("username") String username,
@@ -61,12 +76,15 @@ public class UserController {
         String token = "";
         try {
             List<Object> userInfoEntity = tUserService.getUserInfo(username, password, roleName);
+            List<Object> resList = new ArrayList<>();
             if (userInfoEntity != null){
                 Object[] resultUserInfo = (Object[]) userInfoEntity.get(0);
                 Long userId = Long.parseLong(String.valueOf(resultUserInfo[0]));
+                TUserEntity tUserEntity = tUserDao.getTUserEntity(userId);
                 token = JWTUtils.createToken(userId);
-
-                return new ResponseResult(result,message,token);
+                resList.add(token);
+                resList.add(tUserEntity);
+                return new ResponseResult(result,message, resList);
             }
         } catch (Exception e) {
             message="登陆失败！！！";
@@ -96,7 +114,7 @@ public class UserController {
             if (confirmPassword.equals(password)){
                 userId = tUserService.addTUserEntity(username,password,email,dob, gender);
                 tUserService.saveOrUpdateTUserRole(roleName,email);
-                if (roleName.equals("deliveryman")){
+                if (roleName.equals("Deliveryman")){
                     tDeliverymanService.addTDeliverymanEntity(userId);
                 }
 
@@ -141,9 +159,9 @@ public class UserController {
 
     @ApiOperation(value = "Update user info")
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
-    public ResponseResult updateUserInfo(@ApiParam(required = true,name = "userId",value="User's Id") @RequestParam("userId") long userId,
+    public ResponseResult updateUserInfo(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
                                         @ApiParam(required = true,name = "userPhone",value="User's phone number") @RequestParam("userPhone") String userPhone,
-                                        @ApiParam(required = true,name = "gender",value="User's gender") @RequestParam("gender") String gender,
+                                         @ApiParam(required = true,name = "email",value="User's email") @RequestParam("email") String email,
                                         @ApiParam(required = true,name = "userUrl",value="User's URL") @RequestParam("userUrl") String userUrl
     ) {
         String message="成功更新用户个人信息Successfully update user info！！！";
@@ -151,7 +169,9 @@ public class UserController {
         Integer result=200;
 
         try {
-            tUserService.saveOrUpdateTUserEntity(userId,userUrl,gender,userPhone);
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
+            tUserService.saveOrUpdateTUserEntity(userId,userUrl, email, userPhone);
             return new ResponseResult(result, message, null);
 
         } catch (Exception e) {
@@ -162,10 +182,33 @@ public class UserController {
         return new ResponseResult(result,message,null);
     }
 
+    @ApiOperation(value = "getUserPaymentList")
+    @RequestMapping(value = "/getUserPaymentList", method = RequestMethod.GET)
+    public ResponseResult getUserPaymentList(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization) {
+        String message="Successfully get this user's payment info list！！！";
+
+        Integer result=200;
+
+        String token = "";
+        try {
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
+            List<TPaymentInfoEntity> tPaymentInfoEntityList = tPaymentInfoDao.getPaymentInfoList(userId);
+
+            return new ResponseResult(result,message, tPaymentInfoEntityList);
+
+        } catch (Exception e) {
+            message ="Fail to get this user's payment info list！！！";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
     @ApiOperation(value = "Add/Update payment info")
     @RequestMapping(value = "/updatePaymentInfo", method = RequestMethod.POST)
-    public ResponseResult updatePaymentInfo(@ApiParam(required = true,name = "userId",value="User's Id") @RequestParam("userId") long userId,
-                                            @ApiParam(required = true,name = "method",value="User's payment method") @RequestParam("method") String method,
+    public ResponseResult updatePaymentInfo(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
+                                            @ApiParam(required = true,name = "cardholderName",value="cardholderName") @RequestParam("cardholderName") String cardholderName,
                                             @ApiParam(required = true,name = "cardNum",value="User's Card Number") @RequestParam("cardNum") String cardNum,
                                             @ApiParam(required = true,name = "zipcode",value="User's payment's zipcode") @RequestParam("zipcode") String zipcode,
                                             @ApiParam(required = true,name = "cvv",value="User's card's cvv") @RequestParam("cvv") String cvv,
@@ -176,7 +219,9 @@ public class UserController {
         Integer result=200;
 
         try {
-            tPaymentInfoService.addTPaymentInfoEntity(userId, method, cardNum, zipcode, cvv, expDate);
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
+            tPaymentInfoService.addTPaymentInfoEntity(userId, cardholderName, cardNum, zipcode, cvv, expDate);
             return new ResponseResult(result, message, null);
 
         } catch (Exception e) {
@@ -189,7 +234,7 @@ public class UserController {
 
     @ApiOperation(value = "Update Placed Orders")
     @RequestMapping(value = "/updateOrders", method = RequestMethod.POST)
-    public ResponseResult updatePaymentInfo(@ApiParam(required = false,name="Authorization")  @RequestHeader(value = "Authorization",required = false,defaultValue = "") String Authorization,
+    public ResponseResult updateOrders(@ApiParam(required = false,name="Authorization")  @RequestHeader(value = "Authorization",required = false,defaultValue = "") String Authorization,
                                             @ApiParam(required = false,name = "orderId",value="orderId") @RequestParam(value = "orderId", defaultValue = "0")long orderId,
                                             @ApiParam(required = true,name = "userId",value="User's Id") @RequestParam("userId") long userId,
                                             @ApiParam(required = true,name = "paymentId",value="User's paymentId") @RequestParam("paymentId") long paymentId,

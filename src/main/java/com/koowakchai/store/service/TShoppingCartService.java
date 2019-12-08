@@ -7,4 +7,5 @@ import java.util.List;
 public interface TShoppingCartService {
     public void saveOrUpdateCart(long userId, int subtypeId, int productId, int quantity) throws Exception;
     public List<ShoppingCartItemEntity> getCartItem(long userId) throws Exception;
+    public void deleteShoppingCartItemEntity(List<Integer> cartIds) throws Exception;
 }

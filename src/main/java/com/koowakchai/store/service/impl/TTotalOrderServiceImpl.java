@@ -43,7 +43,7 @@ public class TTotalOrderServiceImpl implements TTotalOrderService {
 
 
     @Override
-    public long addTTotalOrderEntity(long cartEntityId, String remark) throws Exception{
+    public long addTTotalOrderEntity(int cartEntityId, String remark) throws Exception{
         double shipping = 0.0;
         TTotalOrderEntity tTotalOrderEntity = new TTotalOrderEntity();
 //        TPaymentInfoEntity tPaymentInfoEntity = tPaymentInfoDao.getPaymentInfoEntity(paymentId);

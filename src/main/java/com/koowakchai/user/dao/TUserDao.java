@@ -16,7 +16,7 @@ public interface TUserDao {
 
     public Long addTUserEntity(TUserEntity tUserEntity) throws Exception;
 
-    public void saveOrUpdateTUserEntity(long userId, String userUrl, String gender, String userPhone) throws Exception;
+    public void saveOrUpdateTUserEntity(long userId, String userUrl, String email, String userPhone) throws Exception;
 
     public TUserEntity getTUserEntity(long userId) throws Exception;
 

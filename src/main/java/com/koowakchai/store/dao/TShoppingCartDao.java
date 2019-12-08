@@ -9,5 +9,6 @@ import java.util.List;
 public interface TShoppingCartDao {
     public void saveOrUpdateCart(TShoppingCartEntity tShoppingCartEntity) throws Exception;
     public List<TShoppingCartEntity> getCartItem(long userId) throws Exception;
-    public TShoppingCartEntity getTShoppingCartEntity(long cartEntityId) throws Exception;
+    public TShoppingCartEntity getTShoppingCartEntity(int cartEntityId) throws Exception;
+    public void deleteTShoppingCartEntity(int cartEntityId) throws Exception;
 }

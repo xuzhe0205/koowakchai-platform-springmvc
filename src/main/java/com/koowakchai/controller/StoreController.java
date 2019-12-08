@@ -1,6 +1,8 @@
 package com.koowakchai.controller;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.koowakchai.common.base.ResponseResult;
+import com.koowakchai.common.util.JWTUtils;
 import com.koowakchai.hibernate.entity.*;
 import com.koowakchai.store.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -13,8 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/store")
 @RestController
 @EnableAsync
@@ -41,6 +44,8 @@ public class StoreController {
     @Autowired
     private TLogisticsOrderService tLogisticsOrderService;
 
+    private JWTUtils jwtUtils;
+
     @RequestMapping(method = RequestMethod.GET)
     public String showProduct(ModelMap model) {
         model.addAttribute("product", "RELX");
@@ -66,7 +71,7 @@ public class StoreController {
 
     @ApiOperation(value = "Add item to cart")
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
-    public ResponseResult addToCart(@ApiParam(required = true,name = "userId",value="user id") @RequestParam("userId") long userId,
+    public ResponseResult addToCart(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
                                     @ApiParam(required = true,name = "subtypeId",value="product subtype id") @RequestParam("subtypeId") int subtypeId,
                                     @ApiParam(required = true,name = "productId",value="product id") @RequestParam("productId") int productId,
                                     @ApiParam(required = true,name = "quantity",value="quantity of product to be added") @RequestParam("quantity") int quantity) {
@@ -74,6 +79,8 @@ public class StoreController {
 
         Integer result=200;
         try {
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
             tShoppingCartService.saveOrUpdateCart(userId, subtypeId, productId, quantity);
 
             return new ResponseResult(result,message,null);
@@ -87,11 +94,13 @@ public class StoreController {
 
     @ApiOperation(value = "Get item from cart")
     @RequestMapping(value = "/getCartItem", method = RequestMethod.GET)
-    public ResponseResult addToCart(@ApiParam(required = true,name = "userId",value="user id") @RequestParam("userId") long userId) {
+    public ResponseResult getCartItem(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization) {
         String message="提取该用户购物车商品成功";
 
         Integer result=200;
         try {
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
             List<ShoppingCartItemEntity> tShoppingCartEntityList = tShoppingCartService.getCartItem(userId);
 
             return new ResponseResult(result,message,tShoppingCartEntityList);
@@ -120,22 +129,6 @@ public class StoreController {
         return new ResponseResult(result,message,null);
     }
 
-    @ApiOperation(value = "getAllBusinessTypes")
-    @RequestMapping(value = "/getAllBusinessTypes", method = RequestMethod.GET)
-    public ResponseResult getAllBusinessTypes() {
-        String message=" 获取所有 business type成功";
-
-        Integer result=200;
-        try {
-            List<String> tBusinessEntityList = tBusinessService.getAllBusinessTypes();
-            return new ResponseResult(result,message,tBusinessEntityList);
-        } catch (Exception e) {
-            message="获取所有 business type失败";
-            result=500;
-            e.printStackTrace();
-        }
-        return new ResponseResult(result,message,null);
-    }
 
     @ApiOperation(value = "getSortedProductsByType")
     @RequestMapping(value = "/getSortedProductsByType", method = RequestMethod.GET)
@@ -166,9 +159,9 @@ public class StoreController {
         return new ResponseResult(result,message,null);
     }
 
-    @ApiOperation(value = "Place orders")
+    @ApiOperation(value = "Place order")
     @RequestMapping(value = "/placeOrder", method = RequestMethod.POST)
-    public ResponseResult addToCart(@ApiParam(required = true,name = "cartEntityId",value="cartEntityId") @RequestParam("cartEntityId") List<Integer> cartEntityIds,
+    public ResponseResult placeOrder(@ApiParam(required = true,name = "cartEntityId",value="cartEntityId") @RequestParam("cartEntityId") List<Integer> cartEntityIds,
                                     @ApiParam(required = true,name = "remark",value="remark") @RequestParam("remark") String remark) {
         String message="下订单成功 Successfully placed order!!!";
 
@@ -179,6 +172,7 @@ public class StoreController {
                 long orderId = tTotalOrderService.addTTotalOrderEntity(cartEntityId, remark );
                 placedOrderIds.add(orderId);
             }
+            tShoppingCartService.deleteShoppingCartItemEntity(cartEntityIds);
             httpSession.setMaxInactiveInterval(60*60*24);
             httpSession.setAttribute("placedOrderIds", placedOrderIds);
             return new ResponseResult(result,message,null);
