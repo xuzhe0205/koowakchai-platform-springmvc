@@ -175,7 +175,7 @@ public class StoreController {
             tShoppingCartService.deleteShoppingCartItemEntity(cartEntityIds);
             httpSession.setMaxInactiveInterval(60*60*24);
             httpSession.setAttribute("placedOrderIds", placedOrderIds);
-            return new ResponseResult(result,message,null);
+            return new ResponseResult(result,message,placedOrderIds);
         } catch (Exception e) {
             message="下订单失败 Failed to place order!!!";
             result=500;

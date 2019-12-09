@@ -13,12 +13,12 @@ public class TAddressBookServiceImpl implements TAddressBookService {
     private TAddressBookDao tAddressBookDao;
 
     @Override
-    public void saveOrUpdateAddress(long userId, String recipientName, String recipientPhone, String recipientAddr) throws Exception{
+    public long saveOrUpdateAddress(long userId, String recipientName, String recipientPhone, String recipientAddr) throws Exception{
         TAddressBookEntity tAddressBookEntity = new TAddressBookEntity();
         tAddressBookEntity.setUserId(userId);
         tAddressBookEntity.setFullAddr(recipientAddr);
         tAddressBookEntity.setPhoneNum(recipientPhone);
         tAddressBookEntity.setRecipient(recipientName);
-        tAddressBookDao.saveOrUpdateAddress(tAddressBookEntity);
+        return tAddressBookDao.saveAddress(tAddressBookEntity);
     }
 }

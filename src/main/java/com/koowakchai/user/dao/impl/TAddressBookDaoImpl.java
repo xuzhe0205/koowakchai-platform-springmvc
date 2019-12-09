@@ -19,9 +19,9 @@ public class TAddressBookDaoImpl implements TAddressBookDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public void saveOrUpdateAddress(TAddressBookEntity tAddressBookEntity) throws Exception{
+    public long saveAddress(TAddressBookEntity tAddressBookEntity) throws Exception{
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(tAddressBookEntity);
+        return (long)session.save(tAddressBookEntity);
     }
 
     @Override

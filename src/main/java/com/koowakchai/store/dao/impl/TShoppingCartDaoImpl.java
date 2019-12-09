@@ -22,7 +22,7 @@ public class TShoppingCartDaoImpl implements TShoppingCartDao {
     @Override
     public void saveOrUpdateCart(TShoppingCartEntity tShoppingCartEntity) throws Exception{
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(tShoppingCartEntity);
+        session.save(tShoppingCartEntity);
     }
 
     @Override

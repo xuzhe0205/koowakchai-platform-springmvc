@@ -135,18 +135,20 @@ public class UserController {
 
     @ApiOperation(value = "User add/update address")
     @RequestMapping(value = "/updateAddress", method = RequestMethod.POST)
-    public ResponseResult updateAddress(@ApiParam(required = true,name = "recipientPhone",value="Recipient phone number") @RequestParam("recipientPhone") String recipientPhone,
-                                @ApiParam(required = true,name = "recipientName",value="Recipient Name") @RequestParam("recipientName") String recipientName,
-                                        @ApiParam(required = true,name = "userId",value="buyer's userId") @RequestParam("userId") long userId,
-                                @ApiParam(required = true,name = "fullAddr",value="recipient full address") @RequestParam("fullAddr") String fullAddr
+    public ResponseResult updateAddress(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
+                                        @ApiParam(required = true,name = "recipientPhone",value="Recipient phone number") @RequestParam("recipientPhone") String recipientPhone,
+                                        @ApiParam(required = true,name = "recipientName",value="Recipient Name") @RequestParam("recipientName") String recipientName,
+                                        @ApiParam(required = true,name = "fullAddr",value="recipient full address") @RequestParam("fullAddr") String fullAddr
     ) {
         String message="成功更新用户地址Successfully update address！！！";
 
         Integer result=200;
 
         try {
-            tAddressBookService.saveOrUpdateAddress(userId, recipientName, recipientPhone,fullAddr);
-            return new ResponseResult(result, message, null);
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
+            long addrId = tAddressBookService.saveOrUpdateAddress(userId, recipientName, recipientPhone,fullAddr);
+            return new ResponseResult(result, message, addrId);
 
         } catch (Exception e) {
             message="更新用户地址失败 Fail to update address！！！";
@@ -234,9 +236,8 @@ public class UserController {
 
     @ApiOperation(value = "Update Placed Orders")
     @RequestMapping(value = "/updateOrders", method = RequestMethod.POST)
-    public ResponseResult updateOrders(@ApiParam(required = false,name="Authorization")  @RequestHeader(value = "Authorization",required = false,defaultValue = "") String Authorization,
-                                            @ApiParam(required = false,name = "orderId",value="orderId") @RequestParam(value = "orderId", defaultValue = "0")long orderId,
-                                            @ApiParam(required = true,name = "userId",value="User's Id") @RequestParam("userId") long userId,
+    public ResponseResult updateOrders(@ApiParam(required = false,name="Authorization")  @RequestHeader(value = "Authorization",required = false,defaultValue = "") String authorization,
+                                            @ApiParam(required = true,name = "orderIds",value="orderIds") @RequestParam(value = "orderIds")List<Long> orderIds,
                                             @ApiParam(required = true,name = "paymentId",value="User's paymentId") @RequestParam("paymentId") long paymentId,
                                             @ApiParam(required = true,name = "addrId",value="User's addrId") @RequestParam("addrId") long addrId
     ) {
@@ -247,19 +248,26 @@ public class UserController {
         List<Long> emailOrderIds= new ArrayList<>();
 
         try {
-
-            List<Long> placedOrderIds = (ArrayList<Long>)httpSession.getAttribute("placedOrderIds");
-            if (placedOrderIds == null){
-                completeOrderService.updateTTotalOrderEntity(orderId, userId, addrId, paymentId);
-
-                emailOrderIds.add(orderId);
+            Map<String, Claim> claims = jwtUtils.verifyToken(authorization);
+            long userId = Long.parseLong(claims.get("userId").asString());
+//            List<Long> placedOrderIds = (ArrayList<Long>)httpSession.getAttribute("placedOrderIds");
+//            if (placedOrderIds == null){
+//
+//                completeOrderService.updateTTotalOrderEntity(orderId, userId, addrId, paymentId);
+//
+//                emailOrderIds.add(orderId);
+//            }
+//            else{
+//                emailOrderIds = placedOrderIds;
+//                for (Long id : placedOrderIds){
+//                    completeOrderService.updateTTotalOrderEntity(id, userId, addrId, paymentId);
+//                }
+//            }
+            emailOrderIds = orderIds;
+            for (Long id : orderIds){
+                completeOrderService.updateTTotalOrderEntity(id, userId, addrId, paymentId);
             }
-            else{
-                emailOrderIds = placedOrderIds;
-                for (Long id : placedOrderIds){
-                    completeOrderService.updateTTotalOrderEntity(id, userId, addrId, paymentId);
-                }
-            }
+            httpSession.setAttribute("placedOrderIds", null);
 
             System.out.println("Order placed, now trying to send confirmation email");
             boolean isEmailSent = (storeEmailService.sendConfirmationEmail(emailOrderIds) == null)?false:true;
