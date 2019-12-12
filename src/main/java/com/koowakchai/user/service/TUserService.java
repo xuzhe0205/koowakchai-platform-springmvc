@@ -12,5 +12,6 @@ public interface TUserService {
     public List<TUserEntity> getDriverByStatus(String status);
     public void updateUserRegion(long userId, String region) throws Exception;
     public List<TUserEntity> getDeliverymanByStatus(String status);
+    public String validateSignup(String userName, String email) throws Exception;
 
 }

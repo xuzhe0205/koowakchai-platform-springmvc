@@ -62,4 +62,5 @@ public class TLogisticsOrderServiceImpl implements TLogisticsOrderService {
         tLogisticsOrderDao.addShippingOrders(tLogisticsOrderEntity);
         storeEmailService.sendConfirmationEmail(orderIds);
     }
+
 }

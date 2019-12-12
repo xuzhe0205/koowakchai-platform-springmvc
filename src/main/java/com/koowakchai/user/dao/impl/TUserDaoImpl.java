@@ -42,8 +42,28 @@ public class TUserDaoImpl implements TUserDao {
         Session session = sessionFactory.getCurrentSession();
         NativeQuery query = session.createSQLQuery("select t_user.id from t_user where t_user.email = :email");
         List<Object> idList = query.setParameter("email", email).getResultList();
-        Long userId = ((BigInteger)idList.get(0)).longValue();
-        return userId;
+        if (idList.size() == 0){
+            return null;
+        }
+        else{
+            Long userId = ((BigInteger)idList.get(0)).longValue();
+            return userId;
+        }
+
+    }
+
+    @Override
+    public Long getUserIdByUsername (String username) throws Exception{
+        Session session = sessionFactory.getCurrentSession();
+        NativeQuery query = session.createSQLQuery("select t_user.id from t_user where t_user.username = :username");
+        List<Object> idList = query.setParameter("username", username).getResultList();
+        if (idList.size() == 0){
+            return null;
+        }
+        else{
+            Long userId = ((BigInteger)idList.get(0)).longValue();
+            return userId;
+        }
     }
 
     @Override

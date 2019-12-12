@@ -3,6 +3,8 @@ package com.koowakchai.user.service.impl;
 import com.koowakchai.hibernate.entity.TAddressBookEntity;
 import com.koowakchai.hibernate.entity.TPaymentInfoEntity;
 import com.koowakchai.hibernate.entity.TTotalOrderEntity;
+import com.koowakchai.store.dao.TECigaretteDao;
+import com.koowakchai.store.dao.TLiquorDao;
 import com.koowakchai.store.dao.TTotalOrderDao;
 import com.koowakchai.user.dao.TAddressBookDao;
 import com.koowakchai.user.dao.TPaymentInfoDao;
@@ -26,6 +28,12 @@ public class CompleteOrderServiceImpl implements CompleteOrderService {
 
     @Autowired
     private TPaymentInfoDao tPaymentInfoDao;
+
+    @Autowired
+    private TECigaretteDao teCigaretteDao;
+
+    @Autowired
+    private TLiquorDao tLiquorDao;
 
     @Override
     public void updateTTotalOrderEntity(long orderId, long userId, long addrId, long paymentId) throws Exception{
@@ -57,6 +65,12 @@ public class CompleteOrderServiceImpl implements CompleteOrderService {
 
         tTotalOrderDao.updateTotalOrderEntity(orderId, userId, addrId, paymentId, totalCost, ts, recipientName, paymentMethod, shippingAddr, outTradeNumber, status);
 
+        if (tTotalOrderEntity.getSubtypeId() == 1){
+            teCigaretteDao.reduceTECigaEntity(tTotalOrderEntity.getProductId(), tTotalOrderEntity.getQuantity());
+        }
+        else if (tTotalOrderEntity.getSubtypeId() == 2){
+            tLiquorDao.reduceTLiquorEntity(tTotalOrderEntity.getProductId(), tTotalOrderEntity.getQuantity());
+        }
 
     }
 

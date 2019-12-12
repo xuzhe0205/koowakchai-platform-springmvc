@@ -6,5 +6,4 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface TUserRoleDao {
     public void saveOrUpdateTUserRole(TUserRoleEntity tUserRoleEntity) throws Exception;
-
 }

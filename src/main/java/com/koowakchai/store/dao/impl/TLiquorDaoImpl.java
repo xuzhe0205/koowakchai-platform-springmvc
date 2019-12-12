@@ -29,7 +29,7 @@ public class TLiquorDaoImpl implements TLiquorDao {
     }
 
     @Override
-    public List<TLiquorEntity> getTLiquorEntitySorted(String sortKey) throws Exception{
+    public List<TLiquorEntity> getTLiquorEntitySorted(String sortKey, int pageNumber, int pageSize) throws Exception{
         Session session =  sessionFactory.getCurrentSession();
 //        NativeQuery query = session.createSQLQuery("select * from t_liquor order by" + ":sortKey" +"desc").addEntity(TLiquorEntity.class);
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -37,7 +37,40 @@ public class TLiquorDaoImpl implements TLiquorDao {
         Root<TLiquorEntity> root = cr.from(TLiquorEntity.class);
         cr.select(root).orderBy(cb.desc(root.get(sortKey)));
         Query<TLiquorEntity> query = session.createQuery(cr);
+        query.setFirstResult((pageNumber - 1)*pageSize);
+        query.setMaxResults(pageSize);
         List<TLiquorEntity> tLiquorEntityList = query.getResultList();
+        return tLiquorEntityList;
+    }
+
+    @Override
+    public void reduceTLiquorEntity(int id, int quantity) throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TLiquorEntity> cr = cb.createQuery(TLiquorEntity.class);
+        Root<TLiquorEntity> root = cr.from(TLiquorEntity.class);
+        cr.select(root).where(cb.equal(root.get("id"),id));
+        Query<TLiquorEntity> query = session.createQuery(cr);
+        TLiquorEntity tLiquorEntity = query.getSingleResult();
+        int stock = tLiquorEntity.getStock();
+        stock = stock - quantity;
+        tLiquorEntity.setStock(stock);
+        session.saveOrUpdate(tLiquorEntity);
+    }
+
+    @Override
+    public void deleteTLiquorEntity(int productId) throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        TLiquorEntity tLiquorEntity = new TLiquorEntity();
+        tLiquorEntity.setId(productId);
+        session.delete(tLiquorEntity);
+    }
+
+    @Override
+    public List<TLiquorEntity> searchTLiquorEntityList(String keyword) throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        NativeQuery query = session.createSQLQuery("select * from t_liquor where t_liquor.name like CONCAT('%', :keyword, '%') or t_liquor.made_country like CONCAT('%', :keyword, '%') or t_liquor.category like CONCAT('%', :keyword, '%')").addEntity(TLiquorEntity.class);
+        List<TLiquorEntity> tLiquorEntityList = query.setParameter("keyword", keyword).getResultList();
         return tLiquorEntityList;
     }
 

@@ -15,8 +15,19 @@ public class TECigaretteServiceImpl implements TECigaretteService {
     private TECigaretteDao teCigaretteDao;
 
     @Override
-    public List<TECigaretteEntity> getTEcigaEntitySorted(String sortKey) throws Exception{
-        List<TECigaretteEntity> teCigaretteEntityList = teCigaretteDao.getTEcigaEntitySorted(sortKey);
+    public List<TECigaretteEntity> getTEcigaEntitySorted(String sortKey, int pageNumber, int pageSize) throws Exception{
+        List<TECigaretteEntity> teCigaretteEntityList = teCigaretteDao.getTEcigaEntitySorted(sortKey, pageNumber, pageSize);
         return teCigaretteEntityList;
+    }
+
+    @Override
+    public void deleteTECigaEntity(int productId) throws Exception {
+        teCigaretteDao.deleteProduct(productId);
+    }
+
+    @Override
+    public List<TECigaretteEntity> searchTECigaretteEntityList(String keyword) throws Exception {
+        List<TECigaretteEntity> searchResultList = teCigaretteDao.searchTECigaretteEntityList(keyword);
+        return searchResultList;
     }
 }

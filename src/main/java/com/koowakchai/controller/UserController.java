@@ -111,19 +111,29 @@ public class UserController {
         String token = "";
         Long userId = null;
         try {
-            if (confirmPassword.equals(password)){
-                userId = tUserService.addTUserEntity(username,password,email,dob, gender);
-                tUserService.saveOrUpdateTUserRole(roleName,email);
-                if (roleName.equals("Deliveryman")){
-                    tDeliverymanService.addTDeliverymanEntity(userId);
-                }
-
+            String errMsg = tUserService.validateSignup(username, email);
+            if (errMsg.length()>0){
+                message="注册失败！！！";
+                result=500;
+                return new ResponseResult(result, message, errMsg);
             }
             else{
-                result = 500;
-                message = "Unmatched password";
+                if (confirmPassword.equals(password)){
+                    userId = tUserService.addTUserEntity(username,password,email,dob, gender);
+                    tUserService.saveOrUpdateTUserRole(roleName,email);
+                    if (roleName.equals("Deliveryman")){
+                        tDeliverymanService.addTDeliverymanEntity(userId);
+                    }
+
+
+                }
+                else{
+                    result = 500;
+                    message = "Unmatched password";
+                }
+                return new ResponseResult(result, message, null);
+
             }
-            return new ResponseResult(result, message, userId);
 
         } catch (Exception e) {
             message="注册失败！！！";

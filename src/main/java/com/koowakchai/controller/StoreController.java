@@ -44,6 +44,9 @@ public class StoreController {
     @Autowired
     private TLogisticsOrderService tLogisticsOrderService;
 
+    @Autowired
+    private TLogisticsCompanyService tLogisticsCompanyService;
+
     private JWTUtils jwtUtils;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -133,7 +136,9 @@ public class StoreController {
     @ApiOperation(value = "getSortedProductsByType")
     @RequestMapping(value = "/getSortedProductsByType", method = RequestMethod.GET)
     public ResponseResult getSortedProductsByType(@ApiParam(required = true,name = "productType",value="Product Type") @RequestParam("productType") String productType,
-                                                  @ApiParam(required = false,name = "sortedKey",value="Key to sort") @RequestHeader(value = "sortedKey",required = false,defaultValue = "") String sortedKey) {
+                                                  @ApiParam(required = true,name = "pageNumber",value="pageNumber") @RequestParam(value = "pageNumber") int pageNumber,
+                                                  @ApiParam(required = true,name = "pageSize",value="pageSize") @RequestParam(value = "pageSize") int pageSize,
+                                                  @ApiParam(required = false,name = "sortedKey",value="Key to sort") @RequestParam(value = "sortedKey",required = false,defaultValue = "") String sortedKey) {
         String message=" 获取所有Product 并 sort 成功";
 
         Integer result=200;
@@ -144,11 +149,11 @@ public class StoreController {
 
         try {
             if (productType.equals("ecigarette")){
-                List<TECigaretteEntity> teCigaretteEntityList = teCigaretteService.getTEcigaEntitySorted(sortedKey);
+                List<TECigaretteEntity> teCigaretteEntityList = teCigaretteService.getTEcigaEntitySorted(sortedKey, pageNumber, pageSize);
                 return new ResponseResult(result,message, teCigaretteEntityList);
             }
             else if (productType.equals("liquor")){
-                List<TLiquorEntity> tLiquorEntityList = tLiquorService.getTLiquorEntitySorted(sortedKey);
+                List<TLiquorEntity> tLiquorEntityList = tLiquorService.getTLiquorEntitySorted(sortedKey, pageNumber, pageSize);
                 return new ResponseResult(result,message, tLiquorEntityList);
             }
         } catch (Exception e) {
@@ -197,6 +202,95 @@ public class StoreController {
             return new ResponseResult(result,message,null);
         } catch (Exception e) {
             message="处理订单失败 Failed to process order!!!";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "getOrdersByCustomers")
+    @RequestMapping(value = "/getOrdersByCustomers", method = RequestMethod.GET)
+    public ResponseResult getOrdersByCustomers(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization) {
+        String message=" 提取用户订单成功";
+
+        Integer result=200;
+
+
+        try {
+            Map<String, List<TTotalOrderEntity>> tTotalOrderEntityMap = tTotalOrderService.getTTotalOrderEntityList();
+            return new ResponseResult(result,message, tTotalOrderEntityMap);
+        } catch (Exception e) {
+            message="提取用户订单失败";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "getLogisticsCompanyList")
+    @RequestMapping(value = "/getLogisticsCompanyList", method = RequestMethod.GET)
+    public ResponseResult getLogisticsCompanyList(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization) {
+        String message=" 提取物流公司列表成功";
+
+        Integer result=200;
+
+
+        try {
+            List<TLogisticsCompanyEntity> tLogisticsCompanyEntityList = tLogisticsCompanyService.getTLogisticsCompanyEntity();
+            return new ResponseResult(result,message, tLogisticsCompanyEntityList);
+        } catch (Exception e) {
+            message="提取物流公司列失败";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "deleteProduct")
+    @RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
+    public ResponseResult deleteProduct(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
+                                        @ApiParam(required = true,name = "productId",value="productId") @RequestParam("productId") int productId,
+                                        @ApiParam(required = true,name = "productType",value="productType") @RequestParam("productType") String productType) {
+        String message="删除商品成功 Successfully delete product!!!";
+
+        Integer result=200;
+        try {
+            if (productType.equals("ecigarette")){
+                teCigaretteService.deleteTECigaEntity(productId);
+            }
+            else{
+                tLiquorService.deleteTLiquorEntity(productId);
+            }
+            return new ResponseResult(result,message,null);
+        } catch (Exception e) {
+            message="删除商品失败 Failed to delete product!!!";
+            result=500;
+            e.printStackTrace();
+        }
+        return new ResponseResult(result,message,null);
+    }
+
+    @ApiOperation(value = "searchProducts")
+    @RequestMapping(value = "/searchProducts", method = RequestMethod.GET)
+    public ResponseResult searchProducts(@ApiParam(required = true,name = "authorization",value="authorization") @RequestParam("authorization") String authorization,
+                                         @ApiParam(required = true,name = "productType",value="productType") @RequestParam("productType") String productType,
+                                         @ApiParam(required = true,name = "keyword",value="keyword") @RequestParam("keyword") String keyword) {
+        String message=" 搜索提取商品成功";
+
+        Integer result=200;
+
+
+        try {
+            if (productType.equals("ecigarette")){
+                List<TECigaretteEntity> teCigaretteEntityList = teCigaretteService.searchTECigaretteEntityList(keyword);
+                return new ResponseResult(result,message, teCigaretteEntityList);
+            }
+            else {
+                List<TLiquorEntity> tLiquorEntityList = tLiquorService.searchTLiquorEntityList(keyword);
+                return new ResponseResult(result,message, tLiquorEntityList);
+            }
+        } catch (Exception e) {
+            message="搜索提取商品失败";
             result=500;
             e.printStackTrace();
         }

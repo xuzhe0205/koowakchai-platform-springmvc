@@ -6,6 +6,7 @@ import com.koowakchai.common.distribution.GenerateTask;
 import com.koowakchai.common.email.AnnexEMailService;
 import com.koowakchai.common.util.JWTUtils;
 import com.koowakchai.hibernate.entity.*;
+import com.koowakchai.store.dao.TECigaretteDao;
 import com.koowakchai.store.dao.TLogisticsOrderDao;
 import com.koowakchai.store.dao.TTotalOrderDao;
 import com.koowakchai.store.service.StoreEmailService;
@@ -74,6 +75,9 @@ public class KooWakChaiStoreTest {
     private GenerateTask generateTask;
 
     private JWTUtils jwtUtils;
+
+    @Autowired
+    private TECigaretteDao teCigaretteDao;
 
     @Test
     public void testGetAllBusinessTypes() throws Exception{
@@ -165,4 +169,12 @@ public class KooWakChaiStoreTest {
         autoDispatchTaskThread.run();
         System.out.println("how many: ");
     }
+
+    @Test
+    public void testECigaPagination() throws Exception{
+        List<TECigaretteEntity> teCigaretteEntityList = teCigaretteDao.getTEcigaEntitySorted("salesVol", 3, 6);
+        System.out.println(teCigaretteEntityList.size());
+    }
+
+
 }

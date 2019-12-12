@@ -1,9 +1,11 @@
 package com.koowakchai.store.dao.impl;
 
+import com.koowakchai.hibernate.entity.TLogisticsCompanyEntity;
 import com.koowakchai.hibernate.entity.TLogisticsOrderEntity;
 import com.koowakchai.store.dao.TLogisticsOrderDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
 @Repository
 public class TLogisticsOrderDaoImpl implements TLogisticsOrderDao {
@@ -35,5 +38,7 @@ public class TLogisticsOrderDaoImpl implements TLogisticsOrderDao {
         TLogisticsOrderEntity tLogisticsOrderEntity = query.getSingleResult();
         return tLogisticsOrderEntity;
     }
+
+
 
 }

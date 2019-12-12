@@ -46,7 +46,7 @@ public class TUserServiceImpl implements TUserService {
     @Override
     public void saveOrUpdateTUserRole(String roleName, String email) throws Exception{
         int roleId = 0;
-        switch (roleName){
+        switch (roleName.toLowerCase()){
             case "deliveryman":
                 roleId = 1;
                 break;
@@ -96,5 +96,18 @@ public class TUserServiceImpl implements TUserService {
     @Override
     public List<TUserEntity> getDeliverymanByStatus(String status) {
         return tUserDao.getDeliverymanByStatus(status);
+    }
+
+    @Override
+    public String validateSignup(String userName, String email) throws Exception {
+
+        if (tUserDao.getUserId(email) != null){
+            return "Email address already exists!";
+        }
+
+        if (tUserDao.getUserIdByUsername(userName) != null){
+            return "Username already exists!";
+        }
+        return "";
     }
 }

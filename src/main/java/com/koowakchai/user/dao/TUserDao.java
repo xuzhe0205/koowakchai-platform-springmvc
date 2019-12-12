@@ -26,4 +26,6 @@ public interface TUserDao {
 
     public List<TUserEntity> getDeliverymanByStatus(String status);
 
+    public Long getUserIdByUsername (String username) throws Exception;
+
 }

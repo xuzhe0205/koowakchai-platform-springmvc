@@ -4,6 +4,7 @@ import com.koowakchai.hibernate.entity.TTotalOrderEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Transactional
 public interface TTotalOrderDao {
@@ -17,4 +18,5 @@ public interface TTotalOrderDao {
 
     public void updateShippingTotalOrderEntity(long orderId, String trackingNumber, Timestamp shippingDate, String status) throws Exception;
 
+    public List<TTotalOrderEntity> getTTotalOrderEntityList() throws Exception;
 }

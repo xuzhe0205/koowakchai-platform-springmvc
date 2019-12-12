@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 @Service
 public class TTotalOrderServiceImpl implements TTotalOrderService {
@@ -91,6 +91,24 @@ public class TTotalOrderServiceImpl implements TTotalOrderService {
         long orderId = tTotalOrderDao.addTTotalOrderEntity(tTotalOrderEntity);
 
         return orderId;
+
+    }
+
+    @Override
+    public Map<String, List<TTotalOrderEntity>> getTTotalOrderEntityList() throws Exception {
+        Map<String, List<TTotalOrderEntity>> tTotalOrderEntityMap = new HashMap<>();
+        List<TTotalOrderEntity> tTotalOrderEntityList = tTotalOrderDao.getTTotalOrderEntityList();
+        for (TTotalOrderEntity tTotalOrderEntity : tTotalOrderEntityList){
+            if (tTotalOrderEntityMap.containsKey(tTotalOrderEntity.getCustomerEmail())){
+                tTotalOrderEntityMap.get(tTotalOrderEntity.getCustomerEmail()).add(tTotalOrderEntity);
+            }
+            else{
+                List<TTotalOrderEntity> tempList = new ArrayList<>();
+                tempList.add(tTotalOrderEntity);
+                tTotalOrderEntityMap.put(tTotalOrderEntity.getCustomerEmail(), tempList);
+            }
+        }
+        return tTotalOrderEntityMap;
 
     }
 

@@ -11,5 +11,11 @@ public interface TECigaretteDao {
 
     public TECigaretteEntity getTECigaCartItemEntity(int productId) throws Exception;
 
-    public List<TECigaretteEntity> getTEcigaEntitySorted(String sortKey) throws Exception;
+    public List<TECigaretteEntity> getTEcigaEntitySorted(String sortKey, int pageNumber, int pageSize) throws Exception;
+
+    public void reduceTECigaEntity(int id, int quantity) throws Exception;
+
+    public void deleteProduct(int productId) throws Exception;
+
+    public List<TECigaretteEntity> searchTECigaretteEntityList(String keyword) throws Exception;
 }

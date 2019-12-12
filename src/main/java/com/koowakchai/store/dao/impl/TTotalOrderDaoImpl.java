@@ -4,6 +4,7 @@ import com.koowakchai.hibernate.entity.TTotalOrderEntity;
 import com.koowakchai.store.dao.TTotalOrderDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public class TTotalOrderDaoImpl implements TTotalOrderDao {
@@ -62,6 +64,14 @@ public class TTotalOrderDaoImpl implements TTotalOrderDao {
         tTotalOrderEntity.setTrackingNumber(trackingNumber);
         tTotalOrderEntity.setStatus(status);
         session.saveOrUpdate(tTotalOrderEntity);
+    }
+
+    @Override
+    public List<TTotalOrderEntity> getTTotalOrderEntityList() throws Exception {
+        Session session = sessionFactory.getCurrentSession();
+        NativeQuery query = session.createSQLQuery("select * from t_total_order where t_total_order.status = 'paid'").addEntity(TTotalOrderEntity.class);
+        List<TTotalOrderEntity> tTotalOrderEntityList = query.getResultList();
+        return tTotalOrderEntityList;
     }
 
 }
