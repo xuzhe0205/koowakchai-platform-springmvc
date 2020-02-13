@@ -1,6 +1,7 @@
 package com.koowakchai.hibernate.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "t_user", schema = "dbKoowakchai", catalog = "")
@@ -57,7 +58,7 @@ public class TUserEntity {
     }
 
     @Basic
-    @Column(name = "phone_num")
+    @Column(name = "phoneNum")
     public String getPhoneNum() {
         return phoneNum;
     }
@@ -87,7 +88,7 @@ public class TUserEntity {
     }
 
     @Basic
-    @Column(name = "user_url")
+    @Column(name = "userUrl")
     public String getUserUrl() {
         return userUrl;
     }
@@ -110,33 +111,20 @@ public class TUserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         TUserEntity that = (TUserEntity) o;
-
-        if (id != that.id) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (dob != null ? !dob.equals(that.dob) : that.dob != null) return false;
-        if (phoneNum != null ? !phoneNum.equals(that.phoneNum) : that.phoneNum != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
-        if (userUrl != null ? !userUrl.equals(that.userUrl) : that.userUrl != null) return false;
-        if (region != null ? !region.equals(that.region) : that.region != null) return false;
-
-        return true;
+        return id == that.id &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(dob, that.dob) &&
+                Objects.equals(phoneNum, that.phoneNum) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(gender, that.gender) &&
+                Objects.equals(userUrl, that.userUrl) &&
+                Objects.equals(region, that.region);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (dob != null ? dob.hashCode() : 0);
-        result = 31 * result + (phoneNum != null ? phoneNum.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (userUrl != null ? userUrl.hashCode() : 0);
-        result = 31 * result + (region != null ? region.hashCode() : 0);
-        return result;
+        return Objects.hash(id, username, password, dob, phoneNum, email, gender, userUrl, region);
     }
 }

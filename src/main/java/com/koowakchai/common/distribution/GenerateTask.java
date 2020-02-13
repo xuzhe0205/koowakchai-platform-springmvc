@@ -4,8 +4,6 @@ package com.koowakchai.common.distribution;
 
 import com.koowakchai.errand.dao.TPickupDropoffOrderDao;
 import com.koowakchai.errand.dao.TProcurementServiceOrderDao;
-import com.koowakchai.errand.service.TPickupDropoffOrderService;
-import com.koowakchai.errand.service.TProcurementServiceOrderService;
 import com.koowakchai.hibernate.entity.TPickupDropoffOrderEntity;
 import com.koowakchai.hibernate.entity.TProcurementServiceOrderEntity;
 import com.koowakchai.hibernate.entity.TTravelOrderEntity;

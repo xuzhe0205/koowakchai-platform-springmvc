@@ -3,10 +3,13 @@
 
     <persistence-unit name="persistenceUnit">
         <properties>
-            <property name="toplink.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dbKoowakchai?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
+            <property name="toplink.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dbKoowakchai?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;useSSL=false"/>
             <property name="toplink.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/dbKoowakchai"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="xuzhe950205"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
         </properties>
     </persistence-unit>
 </persistence>
