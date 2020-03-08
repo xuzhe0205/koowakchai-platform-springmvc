@@ -19,6 +19,8 @@ public class TBusinessServiceImpl implements TBusinessService {
         return tBusinessDao.getAllBusinessTypes();
     }
 
+
+
     @Override
     public List<TBusinessEntity> getProductTypes(int subtypeId) throws Exception{
         return tBusinessDao.getProductTypes(subtypeId);
