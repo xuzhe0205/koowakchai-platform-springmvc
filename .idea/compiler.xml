@@ -9,8 +9,8 @@
         <module name="KooWakChai" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="13">
-      <module name="KooWakChai" target="13" />
+    <bytecodeTargetLevel target="11">
+      <module name="KooWakChai" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

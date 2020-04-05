@@ -7,5 +7,25 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://127.0.0.1:3306/dbKoowakchai?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="persistenceUnit/TopLink" uuid="28c8159e-36ea-4f08-83c6-cdbf866d4c43">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>TopLink
+
+/Users/zhexu/Desktop/CS/Github/koowakchai-platform-springmvc/PersistenceUnit.xml</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://127.0.0.1:3306/dbKoowakchai?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;useSSL=false</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="persistenceUnit/Hibernate" uuid="04f38092-2140-4f20-9f86-c4c1eb3bd54d">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+/Users/zhexu/Desktop/CS/Github/koowakchai-platform-springmvc/PersistenceUnit.xml</remarks>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://127.0.0.1:3306/dbKoowakchai</jdbc-url>
+    </data-source>
   </component>
 </project>
