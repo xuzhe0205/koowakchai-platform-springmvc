@@ -23,7 +23,7 @@
     <jsp-version>2.1</jsp-version>
     <jstl-version>1.2</jstl-version>
     <hibernate.validator>5.4.1.Final</hibernate.validator>
-    <hibernate.version>5.4.2.Final</hibernate.version>
+    <hibernate.version>5.4.24.Final</hibernate.version>
   </properties>
 
   <dependencies>
